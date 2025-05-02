@@ -35,10 +35,14 @@ public class ProductsResource extends HttpServlet {
         String name = request.getParameter("name");
         int price = Integer.parseInt(request.getParameter("price"));
 
-        Product product = new Product(name, price);
-        products.put(name, product);
+        if(products.containsKey(name.toLowerCase())) response.getWriter().println("<p> Product already exists ! </p>");
 
-        response.getWriter().println("<p> Product is added successfully ! </p>");
+        else {
+            Product product = new Product(name, price);
+            products.put(name, product);
+
+            response.getWriter().println("<p> Product is added successfully ! </p>");
+        }
     }
 
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -48,12 +52,16 @@ public class ProductsResource extends HttpServlet {
         String name = request.getParameter("name");
         int price = Integer.parseInt(request.getParameter("price"));
 
-        Product product = products.get(name);
-        product.setPrice(price);
+        if(!products.containsKey(name.toLowerCase())) response.getWriter().println("<p> Product does not exist! </p>");
 
-        products.put(name, product);
+        else {
+            Product product = products.get(name);
+            product.setPrice(price);
 
-        response.getWriter().println("<p> Product is updated successfully ! </p>");
+            products.put(name, product);
+
+            response.getWriter().println("<p> Product is updated successfully ! </p>");
+        }
     }
 
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -62,9 +70,12 @@ public class ProductsResource extends HttpServlet {
 
         String name = request.getParameter("name");
 
-        products.remove(name);
+        if(!products.containsKey(name.toLowerCase())) response.getWriter().println("<p> Product does not exist! </p>");
 
-        response.getWriter().println("<p> Product is deleted successfully ! </p>");
+        else {
+            products.remove(name);
+            response.getWriter().println("<p> Product is deleted successfully ! </p>");
+        }
     }
 
 }
